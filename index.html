@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" style="color-scheme: light;"><head>
+<meta charset="UTF-8">
+<title>Fall 2026 Enrichment Retreat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;family=Lato:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#002F44; --paper:#FFFFFF; --paper-warm:#EFF6F7; --teal:#61ACB6;
+    --pale:#C2DEE3; --copper:#AA7035; --mist:#E1EBED; --muted:#5B6E78; --dark:#23303A;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ } }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0;background:var(--paper);color:var(--dark);font-family:'Lato',sans-serif;
+    line-height:1.5; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 18px 90px;}
+  body.no-toolbar .wrap{padding-bottom:24px;}
+  .preview-toggle{
+    position:fixed;top:12px;right:12px;z-index:6;
+    background:#fff;color:var(--ink);border:1.5px solid var(--ink);border-radius:20px;
+    padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Lato',sans-serif;
+    box-shadow:0 2px 8px rgba(0,0,0,.18);
+  }
+  .preview-toggle.previewing{background:var(--copper);color:#fff;border-color:var(--copper);}
+
+  .hero{background:var(--ink);color:#fff;padding:28px 18px 18px;position:sticky;top:0;z-index:5;}
+  .hero-inner{max-width:640px;margin:0 auto;}
+  .eyebrow{font-family:'Lato',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin:0 0 6px;}
+  .title{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:clamp(22px,6vw,30px);margin:0 0 6px;}
+  .hero-sub{font-size:13.5px;color:var(--pale);margin:0;}
+  .hero-sub .edit{color:#fff;}
+
+  .tabs{display:flex;gap:6px;margin-top:14px;overflow-x:auto;padding-bottom:2px;}
+  .tab{
+    flex:none;font-family:'Lato',sans-serif;font-weight:700;font-size:13px;color:var(--pale);
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:20px;
+    padding:8px 14px;cursor:pointer;white-space:nowrap;
+  }
+  .tab.active{background:#fff;color:var(--ink);}
+
+  .panel{display:none;padding-top:18px;}
+  .panel.active{display:block;}
+
+  .callout{background:var(--paper-warm);border-left:4px solid var(--copper);padding:14px 16px;border-radius:0 8px 8px 0;font-size:13.5px;margin:14px 0;}
+  .callout b{color:var(--copper);}
+
+  h2.section{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:20px;color:var(--ink);margin:28px 0 4px;padding-top:12px;border-top:2px solid var(--ink);}
+  h3.sub{font-family:'Lato',sans-serif;font-weight:800;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:20px 0 8px;}
+  p.note{color:var(--muted);font-size:13.5px;margin:0 0 12px;}
+
+  /* editable placeholder styling */
+  .edit{
+    display:inline-block;min-width:28px;color:var(--copper);
+    font-weight:700;padding:0 2px;outline:none;border-radius:2px;
+  }
+  .edit.block{display:block;width:100%;min-height:1.4em;border-radius:6px;padding:8px 10px;margin:4px 0;}
+  /* Any editable text lights up only when you tap into it -- keeps the page readable
+     while making clear, the moment you touch it, that it can be changed. */
+  [contenteditable="true"]{border-radius:3px;}
+  [contenteditable="true"]:focus{
+    background:var(--paper-warm);
+    outline:2px dashed var(--copper);
+    outline-offset:2px;
+  }
+
+
+  /* agenda rows */
+  .day-head{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;font-size:22px;color:var(--ink);margin:22px 0 2px;}
+  .day-sub{font-size:13px;color:var(--muted);margin:0 0 10px;}
+  .part-label{font-family:'Lato',sans-serif;font-weight:800;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:16px 0 6px;}
+  .row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--mist);align-items:flex-start;}
+  .row .bar{width:4px;align-self:stretch;border-radius:2px;flex:none;}
+  .bar.session{background:var(--ink);} .bar.meal{background:var(--copper);}
+  .bar.activity{background:var(--teal);} .bar.logistics{background:var(--pale);}
+  .row .time{flex:none;width:112px;font-weight:700;font-size:12.5px;color:var(--ink);}
+  .row .info b{display:block;font-size:14px;color:var(--dark);}
+  .row .info span{display:block;font-size:12.5px;color:var(--muted);font-style:italic;margin-top:1px;}
+
+  /* travel groups */
+  .group{border:1px solid var(--mist);border-radius:10px;padding:12px 14px;margin:10px 0;}
+  .group .g-head{font-family:'Lato',sans-serif;font-weight:800;font-size:12px;color:var(--copper);letter-spacing:.05em;margin-bottom:6px;}
+  .group table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+  .group td{padding:7px 6px;border-bottom:1px solid var(--mist);word-wrap:break-word;overflow-wrap:break-word;vertical-align:top;}
+  .group td:nth-child(1){width:20%;}
+  .group td:nth-child(2){width:42%;}
+  .group td:nth-child(3){width:38%;}
+  .group thead th{
+    background:var(--ink);color:#fff;text-align:left;font-family:'Lato',sans-serif;
+    font-weight:800;font-size:10.5px;letter-spacing:.04em;padding:6px 6px;
+  }
+  .group thead th:first-child{border-top-left-radius:6px;}
+  .group thead th:last-child{border-top-right-radius:6px;}
+  td.edit{display:table-cell !important;}
+  .group .meet{font-size:12.5px;color:var(--muted);margin-top:8px;}
+
+  table.simple{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+  table.simple th{background:var(--ink);color:#fff;text-align:left;padding:8px 10px;font-size:11.5px;}
+  table.simple td{padding:8px 10px;border-bottom:1px solid var(--mist);}
+  table.simple tr:nth-child(even) td{background:var(--mist);}
+
+  .linklist{list-style:none;margin:8px 0 0;padding:0;}
+  .linklist li{margin-bottom:8px;font-size:13.5px;}
+  .linklist a{color:var(--teal);font-weight:700;text-decoration:none;border-bottom:1px solid var(--pale);}
+
+  .announcement{border:1px solid var(--mist);border-radius:10px;padding:12px 14px;margin:0 0 12px;}
+  .announcement-date{font-family:'Lato',sans-serif;font-weight:800;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);margin-bottom:6px;}
+  .announcement-body{font-size:14px;color:var(--dark);line-height:1.5;}
+
+  .savebar{
+    position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--mist);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:center;
+    flex-wrap:wrap;z-index:10;
+  }
+  .btn{font-family:'Lato',sans-serif;font-weight:800;font-size:13px;border-radius:22px;padding:9px 16px;border:none;cursor:pointer;}
+  .btn-save{background:var(--copper);color:#fff;}
+  .btn-link{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);}
+  .btn-fmt{background:var(--paper);color:var(--ink);border:1.5px solid var(--pale);padding:9px 14px;min-width:38px;}
+  .color-popover{
+    display:none;position:fixed;left:50%;bottom:64px;transform:translateX(-50%);
+    background:#fff;border:1px solid var(--mist);border-radius:14px;padding:10px;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);gap:8px;z-index:11;
+  }
+  .color-popover.open{display:flex;}
+  .swatch{
+    width:32px;height:32px;border-radius:50%;border:2px solid #fff;outline:1px solid var(--mist);
+    cursor:pointer;padding:0;font-family:'Lato',sans-serif;font-weight:800;color:#fff;font-size:13px;
+  }
+  .swatch-default{background:var(--dark);}
+  .link-popover{
+    display:none;flex-direction:column;gap:8px;position:fixed;left:16px;right:16px;bottom:64px;
+    background:#fff;border:1px solid var(--mist);border-radius:14px;padding:14px;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:11;max-width:600px;margin:0 auto;
+  }
+  .link-popover.open{display:flex;}
+  .link-popover label{font-family:'Lato',sans-serif;font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);}
+  .link-popover input{
+    font-family:'Lato',sans-serif;font-size:15px;padding:10px 12px;border:1.5px solid var(--pale);
+    border-radius:8px;color:var(--dark);width:100%;
+  }
+  .link-popover input:focus{outline:2px dashed var(--copper);outline-offset:1px;border-color:var(--copper);}
+  .link-popover-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;}
+  .toast{
+    position:fixed;left:50%;bottom:64px;transform:translateX(-50%);background:var(--ink);color:#fff;
+    font-family:'Lato',sans-serif;font-size:13px;padding:10px 16px;border-radius:20px;z-index:12;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);display:none;max-width:85vw;text-align:center;
+  }
+  .toast.open{display:block;}
+  .btn-status{align-self:center;font-size:12px;color:var(--muted);}
+  [contenteditable="true"] a{color:var(--teal);text-decoration:underline;}
+
+  footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--mist);font-size:11.5px;color:#8A8577;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow"><span class="edit" data-ph="season">Fall 2026</span> Enrichment Retreat</p>
+    <h1 class="title">Digital Retreat Guide</h1>
+    <p class="hero-sub"><span class="edit block" style="color:#fff;border-color:rgba(255,255,255,.5);display:inline;min-width:220px;" data-ph="hotel-line">Hotel EMC2 · 228 E Ontario, Chicago, IL 60611 · September 23–25, 2026</span></p>
+    <div class="tabs">
+      <div class="tab active" data-tab="agenda">Agenda</div>
+      <div class="tab" data-tab="announcements">Announcements</div>
+      <div class="tab" data-tab="dress">Dress Code</div>
+      <div class="tab" data-tab="travel">Out-of-State Travel</div>
+      <div class="tab" data-tab="local">Local Travel</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+
+  <!-- ============ DRESS CODE PANEL ============ -->
+  <div class="panel" id="panel-dress">
+    <div class="callout">
+      <b>Important Note for 09/23:</b>&nbsp;You likely won't have a chance to change clothes between dropping off luggage at the hotel and the Welcome Reception. Plan to wear what you traveled in straight to Beatrix.
+    </div>
+
+    <table class="simple">
+      <tbody><tr><th>Day</th><th>Dress</th></tr>
+      <tr><td>Wednesday | 09/23</td><td>Casual and Neat: Welcome Reception &amp; Cubs Game</td></tr>
+      <tr><td>Thursday | 09/24</td><td>Business Casual: Morning Sessions, Architecture Tour, and Dinner</td></tr>
+      <tr><td>Friday | 09/25</td><td>Casual and Neat: Morning Sessions &amp; Lunch</td></tr>
+    </tbody></table>
+
+    <h3 class="sub">What to bring</h3>
+    <p class="note">It will be chilly in Chicago — dress in layers and bring a jacket. We'll be walking up to about half a mile between locations at times, so comfortable shoes are a must.</p>
+    <ul style="padding-left:18px;font-size:14px;">
+      <li>Layers + a jacket (Chicago evenings run cool)</li>
+      <li>Comfortable walking shoes</li>
+      <li>Photo ID — neccesary to get into Cubs game; carry it on you at all times</li>
+      <li>Fully charged phone — carry it on you at all times</li>
+    </ul>
+  </div>
+
+  <!-- ============ AGENDA PANEL ============ -->
+  <div class="panel active" id="panel-agenda">
+
+    <div class="day-head">Day 1 · <span class="edit" data-ph="day1-date"><font color="#61acb6">Wednesday, September 23</font></span></div>
+    <div class="day-sub"><a href="https://weather.com/us/illinois/city/chicago/hourbyhour" target="_blank" rel="noopener noreferrer"><b>Weather:</b> 65 °F</a>; <b>Dress Code: </b>Casual + Neat</div>
+
+    <div class="part-label">Afternoon</div>
+    <div class="row"><div class="bar logistics"></div><div class="time">11:30 AM–2:30 PM</div><div class="info"><b>Arrivals in Chicago</b><span>Out-of-state via ORD · group rideshares · locals via Metra/CTA. Drop off luggage &amp; walk to Beatrix. Rooms may not be ready early, but the hotel will hold luggage in a locked space.</span></div></div>
+    <div class="row"><div class="bar activity"></div><div class="time">1:30–3:30 PM</div><div class="info"><b>Welcome Reception</b><span>Food &amp; drinks provided · <a href="https://maps.app.goo.gl/Mywq7CRSBXjd6C2h7" target="_blank" rel="noopener noreferrer">Beatrix, 671 N. St. Clair St.</a></span></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">4:00 PM</div><div class="info"><b>Hotel Check-In</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">4:45 PM</div><div class="info"><b>Meet in the Hotel Lobby</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">—</div><div class="info"><b>Walk to the Red Line</b><span><a href="https://maps.app.goo.gl/BtcLvjdxihzHv8XBA" target="_blank" rel="noopener noreferrer">N. State St. &amp; W. Grand Ave.</a></span></div></div>
+
+    <div class="part-label">Evening</div>
+    <div class="row"><div class="bar activity"></div><div class="time">6:00 PM</div><div class="info"><b>Arrive at Wrigley Rooftop</b><span><a href="https://maps.app.goo.gl/E15taVBGJGUqEUoA9" target="_blank" rel="noopener noreferrer">3637 N. Sheffield, Chicago</a></span></div></div>
+    <div class="row"><div class="bar activity"></div><div class="time">6:40 PM</div><div class="info"><b>Cubs vs. Marlins — Game Begins</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">~9:30 PM</div><div class="info"><b>Game Ends - Red Line back to Hotel EMC2</b><span><a href="https://maps.app.goo.gl/Zu9MWNx7aLZvLNBC9" target="_blank" rel="noopener noreferrer">Addison Red Line Station</a><br><a href="https://maps.app.goo.gl/7zbUUyxBQcUgYy9Z8" target="_blank" rel="noopener noreferrer">N. State St. &amp; Grand Ave. to Hotel EMC2</a></span></div></div>
+
+    <div class="day-head">Day 2 · <font color="#61acb6">Thursday, September 24</font></div>
+    <div class="day-sub"><a href="https://weather.com/us/illinois/city/chicago/hourbyhour" target="_blank" rel="noopener noreferrer"><b>Weather:</b> 66 °F</a>; <b>Dress Code: </b>Business Casual</div>
+
+    <div class="part-label">Morning</div>
+    <div class="row"><div class="bar meal"></div><div class="time">8:00–9:30 AM</div><div class="info"><b>Breakfast</b><span>Symmetry Meeting Room</span></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">9:30 AM</div><div class="info"><b>Welcome &amp; Opening</b></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">9:35 AM</div><div class="info"><b>Opening Activity</b></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">10:30–10:50 AM</div><div class="info"><b>AI Book Discussion, Part 1</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">10:50–11:00 AM</div><div class="info"><b>Break</b></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">11:00 AM–12:15 PM</div><div class="info"><b>AI Workshop</b></div></div>
+
+    <div class="part-label">Afternoon</div>
+    <div class="row"><div class="bar logistics"></div><div class="time">12:15–12:25 PM</div><div class="info"><b>Feedback Form, Part 1</b></div></div>
+    <div class="row"><div class="bar meal"></div><div class="time">12:25–1:25 PM</div><div class="info"><b>Lunch</b><span><span class="edit" data-ph="day2-lunch-venue"><span style="font-weight: normal;">The Albert, Hotel EMC2</span></span></span></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">1:30–2:00 PM</div><div class="info"><b><span class="edit" data-ph="awards-name"><b style="color: rgb(35, 48, 58); display: inline !important; font-style: normal;">TNLPG Awards<br>Afternoon Activity Instructions<br><span style="color: rgb(91, 110, 120); font-weight: 400; display: inline !important;">Symmetry Meeting Room</span></b></span></b></div></div>
+    <div class="row"><div class="bar activity"></div><div class="time">2:00–3:00 PM</div><div class="info"><b>Free Time</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">3:10 PM</div><div class="info"><b>Meet in the Hotel EMC2 Lobby</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">—</div><div class="info"><b>Depart for Architecture Tour</b><span>Must Arrive 30 min Ahead of Tour Time · <a href="https://maps.app.goo.gl/RePVucBjAjzesoYU6" target="_blank" rel="noopener noreferrer">112 E Wacker Dr., Chicago,</a></span></div></div>
+    <div class="row"><div class="bar activity"></div><div class="time">4:00–5:30 PM</div><div class="info"><b>Architecture Tour<br><span style="color: rgb(91, 110, 120); font-weight: 400; display: inline !important;">Team Photo</span></b></div></div>
+
+    <div class="part-label">Evening</div>
+    <div class="row"><div class="bar meal"></div><div class="time">6:00 PM</div><div class="info"><b>Dinner</b><span><a href="https://maps.app.goo.gl/FdKYFD61sHVZkdot8" target="_blank" rel="noopener noreferrer">The Evie, 537 N. Michigan Ave., Chicago</a><br></span></div></div>
+    <div class="row"><div class="bar activity"></div><div class="time">8:30 PM</div><div class="info"><b>Dinner Concludes — Free Time</b></div></div>
+
+    <div class="day-head">Day 3 · <span style="color: rgb(97, 172, 182);">Friday, September 25</span></div>
+    <div class="day-sub"><a href="https://weather.com/us/illinois/city/chicago/hourbyhour" target="_blank" rel="noopener noreferrer"><b>Weather:</b> 67 °F</a>; <b>Dress Code:</b>&nbsp;Casual + Neat</div>
+
+    <div class="part-label">Morning</div>
+    <div class="row"><div class="bar meal"></div><div class="time">8:00–9:15 AM</div><div class="info"><b>Breakfast</b><span>Symmetry Meeting Room</span></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">9:20–10:00 AM</div><div class="info"><b>AI Presentations &amp; Discussion</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">10:00–10:15 AM</div><div class="info"><b>Break</b><span>Bring luggage to the Symmetry Meeting Room</span></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">10:15–10:50 AM</div><div class="info"><b>Client Relationship Service Excellence Rocks</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">10:50–11:00 AM</div><div class="info"><b>Break</b></div></div>
+    <div class="row"><div class="bar session"></div><div class="time">11:00–11:30 AM</div><div class="info"><b>Feedback Form, Part 2 &amp; Feedback Session</b></div></div>
+
+    <div class="part-label">Closing</div>
+    <div class="row"><div class="bar activity"></div><div class="time">11:40 AM</div><div class="info"><b>Team Photo</b></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">11:50 AM</div><div class="info"><b>Leave for Lunch (Off-Site)</b></div></div>
+    <div class="row"><div class="bar meal"></div><div class="time">12:15 PM</div><div class="info"><b>Lunch</b><span><a href="https://maps.app.goo.gl/2ASzhUv48ryCWXz8A" target="_blank" rel="noopener noreferrer">Roberts Pizza &amp; Dough Co., 465 N. McClurg Court, Chicago</a></span></div></div>
+    <div class="row"><div class="bar logistics"></div><div class="time">1:30 PM</div><div class="info"><b>Retreat Concludes — Safe Travels!</b><span><a href="https://maps.app.goo.gl/2ASzhUv48ryCWXz8A" target="_blank" rel="noopener noreferrer">Return to Hotel EMC2</a>, Collect Luggage, and Depart<br>Out-of-state via ORD · Group rideshares from Hotel EMC2</span></div></div>
+  </div>
+
+  <!-- ============ ANNOUNCEMENTS PANEL ============ -->
+  <div class="panel" id="panel-announcements">
+    <p class="note">Anything time-sensitive or last-minute goes here — weather changes, venue swaps, reminders. Newest first.</p>
+        <div id="announcementsList">
+      <div class="announcement">
+        <div class="announcement-date">Pinned</div>
+        <div class="announcement-body">Tap "+ Post Update" above to add a new announcement. Newest posts appear at the top — don't forget to hit Save Changes when you're done.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TRAVEL (OUT OF STATE) PANEL ============ -->
+  <div class="panel" id="panel-travel">
+    <h2 class="section" style="margin-top:0;border-top:none;padding-top:0;">O'Hare (ORD) ↔ Hotel EMC2</h2>
+    <p class="note">Bags: carry-on only. Airport: Chicago O'Hare (ORD). United typically lands at Terminal 1, American at Terminal 3 — terminals are connected by the free ATS train, or it's a brisk 10-minute walk.</p>
+
+    <div class="callout">Individuals listed in <b>bold with an asterisk (*)</b> order the rideshare for their group. Charge it to your Ramp Retreat Travel Stipend card (add it to Apple/Google Pay ahead of time). If Ramp doesn't work, use your own card and send your receipt to <span class="edit" data-ph="reimburse-contact">[Name]</span> for reimbursement.
+    </div>
+
+    <h3 class="sub">How to order a rideshare</h3>
+    <table class="simple">
+      <tbody><tr><td><b>1. Open Uber or Lyft</b><br>Whichever app you already have works fine.</td></tr>
+      <tr><td><b>2. Enter the destination</b><br>Type "Hotel EMC2, Chicago" and select it.</td></tr>
+      <tr><td><b>3. Pick the right size</b><br>3+ people: choose UberXL/Lyft XL. Otherwise please order a standard economy ride.</td></tr>
+      <tr><td><b>4. Match &amp; go</b><br>Confirm the plate and driver photo. Charge your Ramp card, save the receipt, and add a memo.</td></tr>
+    </tbody></table>
+
+    <h3 class="sub">Arrivals — <span class="edit" data-ph="arr-day">WEdnesday, September 23</span></h3>
+    <p class="note">Groups are based on who lands around the same time and terminal. Text your group as soon as you land so you can find each other before ordering.</p>
+
+    <div class="group"><div class="g-head">GROUP 1</div><table><thead><tr><th>Traveler</th><th>Lands</th><th>Terminal/Notes</th></tr></thead><tbody><tr><td>RPC</td><td class="edit" data-ph="g1-time"><font color="#002f44">9:44 AM, Tue 9/22</font></td><td>United · T1</td></tr></tbody></table></div>
+    <div class="group"><div class="g-head">GROUP 2</div><table><thead><tr><th>Traveler</th><th>Lands</th><th>Terminal/Notes</th></tr></thead><tbody><tr><td>CRA</td><td class="edit" data-ph="g2-time"><span style="color: rgb(0, 47, 68);">10:35 AM</span></td><td>American · T3</td></tr></tbody></table></div>
+    <div class="group"><div class="g-head">GROUP 3</div><table><thead><tr><th>Traveler</th><th>Lands</th><th>Terminal/Notes</th></tr></thead>
+      <tbody><tr><td><b>TWJ*</b></td><td class="edit" data-ph="g3a-time"><span style="color: rgb(0, 47, 68);">11:59 AM</span></td><td>American (AA 1229) · T3</td></tr>
+      <tr><td>BCS + ES</td><td class="edit" data-ph="g3b-time"><span style="color: rgb(0, 47, 68);">12:09 PM</span></td><td>American (AA 1041) · T3</td></tr>
+    </tbody></table></div>
+    <div class="group"><div class="g-head">GROUP 4</div><table><thead><tr><th>Traveler</th><th>Lands</th><th>Terminal/Notes</th></tr></thead>
+      <tbody><tr><td>TRM + CM</td><td class="edit" data-ph="g4a-time"><span style="color: rgb(0, 47, 68);">12:14 PM</span></td><td>American (AA 2908) · T3</td></tr>
+      <tr><td><b>MBD*</b></td><td class="edit" data-ph="g4b-time"><span style="color: rgb(0, 47, 68);">12:14 PM</span></td><td>American (AA 2908) · T3</td></tr>
+    </tbody></table></div>
+    <div class="group"><div class="g-head">GROUP 5</div><table><thead><tr><th>Traveler</th><th>Lands</th><th>Terminal/Notes</th></tr></thead>
+      <tbody><tr><td>EMS</td><td class="edit" data-ph="g5a-time"><span style="color: rgb(0, 47, 68);">12:22 PM</span></td><td>American (AA 383) · T3</td></tr>
+      <tr><td>VXL</td><td class="edit" data-ph="g5b-time"><span style="color: rgb(0, 47, 68);">12:22 PM</span></td><td>American (AA 383) · T3</td></tr>
+      <tr><td><b>AER*</b></td><td class="edit" data-ph="g5c-time"><span style="color: rgb(0, 47, 68);">12:55 PM</span></td><td>United (UA 1314) · T1</td></tr>
+    </tbody></table>
+      <p class="meet">Meet: VXL and EMS land first (Terminal 3). Confirm AER's flight arrives at Terminal 1 and follow signs there. Once AER lands, order a rideshare for pickup from her terminal.</p>
+    </div>
+
+    <h3 class="sub">Departures — <span class="edit" data-ph="dep-day">Friday, September 25</span></h3>
+    <p class="note">Times below build in ~45 min to O'Hare plus a 2-hour buffer, with extra padding for afternoon rush hour. Book at least a day ahead to avoid surge pricing.</p>
+
+    <div class="group"><div class="g-head">GROUP 1</div><table><thead><tr><th>Traveler</th><th>Flight</th><th>Terminal/Notes</th></tr></thead><tbody><tr><td>CRA</td><td class="edit" data-ph="d1-flight"><font color="#002f44"><span style="font-weight: 400;">10:25 AM · United · T1</span></font></td><td class="edit" data-ph="d1-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 7:40 AM</span></td></tr></tbody></table></div>
+    <div class="group"><div class="g-head">GROUP 2</div><table><thead><tr><th>Traveler</th><th>Flight</th><th>Terminal/Notes</th></tr></thead>
+      <tbody><tr><td>AER</td><td class="edit" data-ph="d2a-flight"><font color="#002f44"><span style="font-weight: 400;">5:13 PM · American · T3</span></font></td><td class="edit" data-ph="d2a-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 2 PM</span></td></tr>
+      <tr><td>VXL</td><td class="edit" data-ph="d2b-flight"><font color="#002f44"><span style="font-weight: 400;">5:48 PM · American · T3</span></font></td><td class="edit" data-ph="d2b-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 2 PM</span></td></tr>
+      <tr><td>EMS</td><td class="edit" data-ph="d2c-flight"><font color="#002f44"><span style="font-weight: 400;">5:50PM · American · T3</span></font></td><td class="edit" data-ph="d2c-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 2 PM</span></td></tr>
+      <tr><td><b>RPC*</b></td><td class="edit" data-ph="d3a-flight"><font color="#002f44"><span style="font-weight: 400;">6:27 PM · United · T1</span></font></td><td class="edit" data-ph="d3a-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 2 PM</span></td></tr>
+    </tbody></table>
+      <p class="meet">Note: Please let the driver know you have multiple drop-offs when you get in (T1 and T3), or use the app's multi-stop option.</p>
+    </div>
+    <div class="group"><div class="g-head">GROUP 3</div><table><thead><tr><th>Traveler</th><th>Flight</th><th>Terminal/Notes</th></tr></thead>
+      <tbody><tr><td><b>TWJ*</b></td><td class="edit" data-ph="d3b-flight"><font color="#002f44"><span style="font-weight: 400;">6:41 PM · American · T3</span></font></td><td class="edit" data-ph="d3b-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 3 PM</span></td></tr>
+      <tr><td>LLP</td><td class="edit" data-ph="d3c-flight"><font color="#002f44"><span style="font-weight: 400;">7:03 PM · American · T3</span></font></td><td class="edit" data-ph="d3c-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 3 PM</span></td></tr>
+      <tr><td>BCS + ES</td><td class="edit" data-ph="d3d-flight"><font color="#002f44"><span style="font-weight: 400;">7:05 PM · American · T3</span></font></td><td class="edit" data-ph="d3d-leave"><span style="color: rgb(0, 47, 68); font-weight: 400;">~ 3 PM</span></td></tr>
+    </tbody></table>
+    </div>
+
+    <div class="callout">Staying through the weekend: <b>TRM + CM</b> and <b>MBD + AY</b> will coordinate their own return separately.</div>
+  </div>
+
+  <!-- ============ LOCAL TRAVEL PANEL ============ -->
+  <div class="panel" id="panel-local">
+    <h2 class="section" style="margin-top:0;border-top:none;padding-top:0;">Suburban Chicago ↔ Hotel EMC2</h2>
+    <p class="note">For local team members, public transit will likely be quicker and more affordable than driving.</p>
+
+    <h3 class="sub">Parking (if you do drive)</h3>
+    <table class="simple">
+      <tbody><tr><th>Option</th><th>Cost</th><th>Notes</th></tr>
+      <tr><td>Valet</td><td>$65/night</td><td>Includes in-and-out privileges</td></tr>
+      <tr><td>Self-park</td><td>$43/entry</td><td>Charged EVERY time you leave &amp; return - no in/out privileges</td></tr>
+      <tr><td>SpotHero</td><td>Variable</td><td>Check fine print, book in advance</td></tr>
+    </tbody></table>
+    <p class="note">Local team members receive a <b>$60 travel stipend</b> for getting into and out of the city.</p>
+
+    <h3 class="sub">Metra: recommended route</h3>
+    <table class="simple">
+      <tbody><tr><th>Suburb</th><th>Line</th><th>Arrives at</th></tr>
+      <tr><td>Evanston</td><td>Union Pacific North (UP-N) - or CTA Purple Line</td><td>Ogilvie Transportation Ctr</td></tr>
+      <tr><td>Arlington Heights</td><td>Union Pacific Northwest (UP-NW)<br></td><td>Ogilvie Transportation Ctr</td></tr>
+      <tr><td>Wheaton</td><td>Union Pacific West (UP-W)</td><td>Ogilvie Transportation Ctr</td></tr>
+      <tr><td>Geneva</td><td>Union Pacific West (UP-W)</td><td>Ogilvie Transportation Ctr</td></tr>
+      <tr><td>Batavia</td><td>No direct station — try Geneva or West Chicago</td><td>Ogilvie Transportation Ctr</td></tr>
+    </tbody></table>
+
+    <h3 class="sub">From Ogilvie to Hotel</h3>
+    <table class="simple">
+      <tbody><tr><td><b>STEP 1 — Take Metra to Ogilvie</b><br>Board your suburb's Union Pacific line heading downtown. Buy your ticket via the Ventra app before boarding, or from a station agent/machine.</td></tr>
+      <tr><td><b>STEP 2 — Ogilvie to Hotel EMC2</b><br>Hotel EMC2 is about 1.5–2 miles from Ogilvie. A short rideshare (10–15 min) or a CTA bus/L connection both work well; use the RTA Trip Planner for the current best route.</td></tr>
+      <tr><td><b>STEP 3 — Same route home</b><br>Reverse the trip when you head home — check Metra's schedule for return times, since suburban service can run less frequently in the evening.</td></tr>
+    </tbody></table>
+
+    <h3 class="sub">Helpful links</h3>
+    <ul class="linklist">
+      <li><a href="https://metra.com" target="_blank">Metra — schedules &amp; fares</a></li>
+      <li><a href="https://metra.com/maps-schedules" target="_blank">Metra Trip Planner &amp; Maps</a></li>
+      <li><a href="https://www.rtachicago.org/travel-tools/trip-planner" target="_blank">RTA Trip Planner</a></li>
+      <li><a href="https://www.transitchicago.com" target="_blank">CTA — Chicago Transit Authority</a></li>
+      <li><a href="https://www.ventrachicago.com" target="_blank">Ventra</a></li>
+    </ul>
+  </div>
+
+  <footer>Prepared for internal team use · private link, not publicly listed</footer>
+</div>
+
+
+
+
+
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'instant'});
+    });
+  });
+</script>
+
+
+
+</body></html>
